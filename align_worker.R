@@ -38,20 +38,5 @@ alnres = function(filein){
     tlabel = c(tlabel, temp3[1])
     
   }
-feasco.append(seqid)
-feasco.append(alnlen)
-feasco.append(nmiss)
-feasco.append(ngap)
-feasco.append(evalue)
-feasco.append(bscore)
-feature = np.array(feasco)
-feature = feature.T
-return(qid,tid,qlabel,tlabel,feature)
 }
 
-#fileX = 'E:/ARG0823/tmp/argminer_res1.uniq'
-def main():
-  qid,tid,qlabel,tlabel,feature = alnres(sys.argv[1])
-
-if(__name__ == '__main__'):
-  main()

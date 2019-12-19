@@ -3,22 +3,22 @@ library("stringr")
 comparison = function(y_tru, y_pre){
   qamount = 0
   exactmatch = 0
-  ru = c()
-  mi = c()
-  cr = c()
-  tmp = c()
-  YT = unlist(strsplit(y_tru, split = ","))
-  YP = unlist(strsplit(y_pre, split = ","))
+  ru = list()
+  mi =list()
+  cr = list()
+  tmp = list()
+  YT = unlist(strsplit(as.character(y_tru), split = ","))
+  YP = unlist(strsplit(as.character(y_pre), split = ","))
   if (identical(YT, YP)){
     exactmatch = 1 + exactmatch
     tmp = YT
     return('exact match')
   }
   else{
-    ru = c(ru, YT[!YT%in%YP])
-    mi = c(mi, YP[!YP%in%YT])
-    cr = c(cr, YP[YP%in%YT])
-    tmp = c(tmp,ru, mi, cr)
+    ru = append(ru, YT[!YT%in%YP]) #in T not in P
+    mi = append(mi, YP[!YP%in%YT]) #in P not in T
+    cr = append(cr, YP[YP%in%YT]) #in P and T
+    tmp = append(tmp,list(ru = ru, mi = mi, cr = cr))
     return(tmp)
   }
 }
@@ -26,16 +26,24 @@ comparison = function(y_tru, y_pre){
 readIC = function(label){
   list_label = c()
   list_IC = c()
-  argf = commandArgs(trailingOnly = TRUE)
-  for (line in readLines(argf)) {
-   line = trimws(line, which = c("both", "left", "right"))
+  #argv = commandArgs(trailingOnly = TRUE)
+  #data1 = read.table(argv[2], sep = " ")
+  #data1 = read.table('argminer_IC_new.txt', sep = " ")
+  data1 = file('argminer_IC_new.txt',"r")
+  for (line in readLines(data1)) {
+   line = trimws(line, which = c("both", "left", "right")) #eliminate space
    line_temp_1 = unlist(strsplit(line, split = ","))
-   list_label = c(list_label, list_temp_1[0])
-   line_temp_2 = unlist(strsplit(line, split = ","))
-   list_IC = c(list_IC, as.numeric(line_temp_2[1]))
+   list_label = c(list_label, line_temp_1[1])
+   list_IC = c(list_IC, as.numeric(line_temp_1[2]))
   }
-  if (isTRUE(label%in%argv)){
-    index_label = grep(label, list_label)
+  close(data1)
+  if (isTRUE(label%in%list_label)){
+    for (i in 1:length(list_label)) {
+      if(identical(label, list_label[i])){
+        index_label = i
+        break
+      }
+    }
     IC = list_IC[index_label]
     return(IC)
   }
@@ -46,23 +54,33 @@ efs = function(cutoff){
   em = 0
   f1 = 0
   s1 = 0
-  Pr = 0
-  Rc = 0
+  Pr = 0 #precision
+  Rc = 0 #recall
   m = 0
   n = 0
-  avgpr = 0
-  avgrc = 0
+  avgpr = 0 #avg precision
+  avgrc = 0 #avg recall
   ru = 0
   mi = 0
-  #qid,tid,qlabel,tlabel,feature = alnres(sys.argv[1])
+  #argf = commandArgs(trailingOnly = TRUE) ## it may be wrong here, check later
+  #data2 = read.table(argf[1], sep = " ")
+  #data2 = read.table('argminer_res0.uniq', sep = " ")
+  data2 = file('argminer_res0.uniq',"r")
+  result = alnres(data2)
+  #result = alnres('argminer_res0.uniq')
+  qid = result$qid
+  tid = result$tid
+  qlabel = result$qlabel
+  tlabel = result$tlabel
+  feature = result$feature
   
-  for (i in 0:lenth(qid)){
+  for (i in 1:length(qid)){
     pr = 0
     rc = 0
-    compres = comparison(qlabel[i],tlabel[i])
-    seqid = feature[i][0]
+    compres = comparison(qlabel[[i]],tlabel[[i]])
+    seqid = feature[[1]][[i]]
     if(seqid >= cutoff){
-      if(compres == 'exact match'){
+      if(identical(compres, 'exact match')){
         em = em + 1
         pr = 1
         rc = 1
@@ -70,13 +88,19 @@ efs = function(cutoff){
         mi = mi + 0
       }
       else{
-        pr = lenth(compres[2])/(lenth(compres[2]) + lenth(compres[1]))
-        rc = lenth(compres[2])/(lenth(compres[2]) + lenth(compres[0]))
-        for ( j in 0:lenth(compres[0])) {
-          ru = ru + readIC(compres[0][j])
+        pr = length(compres$cr)/(length(compres$cr) + length(compres$mi))
+        rc = length(compres$cr)/(length(compres$cr) + length(compres$ru))
+        for ( j in 1:length(compres$ru)) {
+          if (length(compres$ru) == 0){
+            break
+          }
+          ru = ru + readIC(compres$ru[[j]])
         }
-        for (j in 0:lenth(compres[1])) {
-          mi =mi + readIC(compres[1][j])
+        for (j in 1:length(compres$mi)) {
+          if (length(compres$mi) == 0){
+            break
+          }
+          mi =mi + readIC(compres$mi[[j]])
         }
       }
       Pr = pr + Pr
@@ -89,11 +113,17 @@ efs = function(cutoff){
       rc = 0
       n = n + 1
       Rc = Rc + rc
-      for (j in 0:lenth(compres[0])){
-        ru = ru + readIC(compres[0][j])
+      for (j in 1:length(compres$ru)){
+        if (length(compres$ru) == 0){
+          break
+        }
+        ru = ru + readIC(compres$ru[[j]])
       }
-      for (j in 0:lenth(compres[2])){
-        ru = ru + readIC(compres[2][j])
+      for (j in 1:length(compres$cr)){
+        if (length(compres$cr) == 0){
+          break
+        }
+        ru = ru + readIC(compres$cr[[j]])
       }
     }
   }
@@ -105,11 +135,6 @@ efs = function(cutoff){
   ru = ru/n
   mi = mi/n
   s1 = sqrt(ru ^ 2 + mi ^ 2)
-  result = c(emc, f1, s1)
+  result = list(emv = emv, f1 =  f1, s1 = s1)
   return(result)
-}
-
-
-draw = function(a, b, name){
-  
 }

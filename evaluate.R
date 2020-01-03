@@ -1,5 +1,49 @@
 library("stringr")
 
+alnres = function(filein){
+  qid = list()
+  tid = list()
+  seqid = list()
+  alnlen = list()
+  nmiss = list()
+  ngap = list()
+  qbegin = list()
+  qend = list()
+  tbegin = list()
+  tend = list()
+  evalue = list()
+  bscore = list()
+  feasco = list()
+  qlabel = list()
+  tlabel = list()
+  f = readLines(filein)
+  close(filein)
+  for (line in f) {
+    line = trimws(line, which = c("both", "left", "right"))
+    temp1 = unlist(strsplit(line, split = "\\s+"))
+    temp2 = unlist(strsplit(temp1[1], split = "\\|"))
+    qid = c(qid, temp2[1])
+    temp3 = unlist(strsplit(temp1[2], split = "\\|"))
+    tid = c(tid, temp3[1])
+    seqid = c(seqid, as.numeric(temp1[3]))
+    alnlen = c(alnlen, as.integer((temp1[4])))
+    nmiss = c(nmiss, as.integer((temp1[5])))
+    ngap = c(ngap, as.integer((temp1[6])))
+    qbegin = c(qbegin, as.integer((temp1[7])))
+    qend = c(qend, as.integer((temp1[8])))
+    tbegin = c(tbegin, as.integer((temp1[9])))
+    tend = c(tend, as.integer((temp1[10])))
+    evalue = c(evalue, as.numeric(temp1[11]))
+    bscore = c(bscore, as.numeric(temp1[12]))
+    qlabel = c(qlabel, temp2[2])
+    tlabel = c(tlabel, temp3[2])
+  }
+  feasco = append(feasco, list(seqid, alnlen, nmiss, ngap, evalue, bscore))
+  feature = feasco
+  result = list(qid = qid, tid = tid, qlabel = qlabel, tlabel = tlabel, feature = feature)
+  return(result)
+}
+
 comparison = function(y_tru, y_pre){
   qamount = 0
   exactmatch = 0
@@ -54,8 +98,8 @@ efs = function(cutoff){
   em = 0
   f1 = 0
   s1 = 0
-  Pr = 0 #precision
-  Rc = 0 #recall
+  Pr = 0 #sum of precision
+  Rc = 0 #sum of recall
   m = 0
   n = 0
   avgpr = 0 #avg precision
@@ -75,6 +119,7 @@ efs = function(cutoff){
   feature = result$feature
   
   for (i in 1:length(qid)){
+  #for (i in 1656:1700){
     pr = 0
     rc = 0
     compres = comparison(qlabel[[i]],tlabel[[i]])
@@ -88,7 +133,7 @@ efs = function(cutoff){
         mi = mi + 0
       }
       else{
-        pr = length(compres$cr)/(length(compres$cr) + length(compres$mi))
+        pr = length(compres$cr)/(length(compres$cr) + length(compres$mi))#precision for each sample
         rc = length(compres$cr)/(length(compres$cr) + length(compres$ru))
         for ( j in 1:length(compres$ru)) {
           if (length(compres$ru) == 0){
@@ -135,6 +180,6 @@ efs = function(cutoff){
   ru = ru/n
   mi = mi/n
   s1 = sqrt(ru ^ 2 + mi ^ 2)
-  result = list(emv = emv, f1 =  f1, s1 = s1)
-  return(result)
+  result_all = list(Pr = Pr, Rc = Rc, AvgPr = avgpr, AvgRc = avgrc, emv = emv, f1 =  f1, s1 = s1)
+  return(result_all)
 }

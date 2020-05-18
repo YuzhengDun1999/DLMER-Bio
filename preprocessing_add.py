@@ -47,8 +47,8 @@ class Preprocessor(object):
 		#print(probas)
 		nodes = list(probas.keys())
 		tree.fill_with(probas)
-		tree.update_value()
-		ancestors = reduce(lambda x, y: x + y, [tree.path_to_node(nid) for nid in nodes])
+		tree.update_values()
+		ancestors = reduce(lambda x, y: x + y, [tree.get_path_to_node(nid) for nid in nodes])
 		#print(ancestors)
 		new_probas = { ( nid, tree.get_node(nid).data ) for nid in ancestors}
 		return new_probas

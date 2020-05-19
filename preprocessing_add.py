@@ -4,6 +4,7 @@ from functools import reduce
 from tqdm import tqdm, trange
 import re
 from livingTree import SuperTree
+from copy import deepcopy
 
 
 class Preprocessor(object):
@@ -94,7 +95,7 @@ class Preprocessor(object):
 							for label, proba in zip(pred_labels[i], probas[i])} 
 						   for i in range(len(probas)) ]
 		# * + zip means unzip 
-		labels_probas_extd = [ list( zip(*extract_probas(tree.copy(), i) ) ) 
+		labels_probas_extd = [ list( zip(*extract_probas(deepcopy(tree), i) ) ) 
 										  for i in tqdm(plabels_probas) ] 
 		#print(labels_probas_extd[0:5]) 
 		pred_labels_extd = [','.join(i[0]) for i in labels_probas_extd]

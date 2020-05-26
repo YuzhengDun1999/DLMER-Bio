@@ -9,12 +9,15 @@ from copy import deepcopy
 
 class Preprocessor(object):
 
-	def __init__(self, input_file, output_file):
+	def __init__(self, input_file, output_file, do_filter=True):
 		content = self.readlines_from_txt(input_file)
 
 		## replace host-associated with host_associated
 		self.content = self.fix_host_associated(content)
 		df = self.parse_from_lines(self.content)
+		if do_filter:
+			print('Option: do filter (yes).')
+			df = self.filter_by_label(df)
 		self.tree = self.build_tree_from_labels(df['pred_labels'])
 		#df = self.mutate_nlayers_from_labels(df)
 		self.df = self.extract_layers(df)
@@ -80,6 +83,13 @@ class Preprocessor(object):
 		print('finished !')
 		return data
 
+	def filter_by_label(self, df):
+		indeces_keep = df.apply(lambda x: x['pred_labels'].split(',').count(x['true_label']), axis=1)
+		indeces_keep = indeces_keep.astype(bool)
+		ndf = df[indeces_keep].reset_index(drop=True)
+		print(ndf)
+		return ndf
+
 	def extract_layers(self, df):
 		"""
 		
@@ -133,7 +143,8 @@ def count_pattern(pattern, string):
 
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
-	parser.add_argument("-i", "--input_file", type=str, default='data_unlayered.txt', help="path of your input file")
-	parser.add_argument("-o", "--output_file", type=str, default='data_layered.txt', help="path to save output")
+	parser.add_argument("-i", "--input-file", type=str, default='data_unlayered.txt', help="path of your input file")
+	parser.add_argument("-o", "--output-file", type=str, default='data_layered.txt', help="path to save output")
+	parser.add_argument("-f", "--filter", type=bool, default='True', help="adjust whether to filter the input samples")
 	args = parser.parse_args()
-	pr = Preprocessor(input_file=args.input_file, output_file=args.output_file)
+	pr = Preprocessor(input_file=args.input_file, output_file=args.output_file, do_filter=args.filter)

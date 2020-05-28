@@ -9,11 +9,11 @@ from copy import deepcopy
 
 class Preprocessor(object):
 
-	def __init__(self, input_file, output_file, do_filter=True):
+	def __init__(self, input_file, output_file, do_filter=1):
 		content = self.readlines_from_txt(input_file)
 
 		## replace host-associated with host_associated
-		self.content = self.fix_host_associated(content)
+		self.content = self.fix_issues(content)
 		df = self.parse_from_lines(self.content)
 		if do_filter:
 			print('Option: do filter (yes).')
@@ -23,14 +23,15 @@ class Preprocessor(object):
 		self.df = self.extract_layers(df)
 		self.to_text(self.df, output_file=output_file)
 
-	def fix_host_associated(self, content):
+	def fix_issues(self, content):
 		"""
-		fix host-associated error in unlayered data, tested
+		fix issues in unlayered data, tested
 		:param content:
 		:return:
 		"""
-		print('Fixing errors in unlayered data')
-		return [i.replace('Host-associated', 'Host_associated') for i in tqdm(content)]
+		print('Fixing issues in unlayered data')
+		return [i.replace('Host-associated', 'Host_associated').\
+		replace('Oil-contaminated', 'Oil_contaminated').replace('Non-marine', 'Non_marine') for i in tqdm(content)]
 
 	def build_tree_from_labels(self, labels):
 		"""
@@ -87,7 +88,7 @@ class Preprocessor(object):
 		indeces_keep = df.apply(lambda x: x['pred_labels'].split(',').count(x['true_label']), axis=1)
 		indeces_keep = indeces_keep.astype(bool)
 		ndf = df[indeces_keep].reset_index(drop=True)
-		print(ndf)
+		#print(ndf)
 		return ndf
 
 	def extract_layers(self, df):
@@ -145,6 +146,7 @@ if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-i", "--input-file", type=str, default='data_unlayered.txt', help="path of your input file")
 	parser.add_argument("-o", "--output-file", type=str, default='data_layered.txt', help="path to save output")
-	parser.add_argument("-f", "--filter", type=bool, default='True', help="adjust whether to filter the input samples")
+	parser.add_argument("-f", "--filter", type=int, default='1', help="adjust whether to filter the input samples, default: `1` (do filter). `0` means `False` (skipping filtering) ")
 	args = parser.parse_args()
+	print(args.filter)
 	pr = Preprocessor(input_file=args.input_file, output_file=args.output_file, do_filter=args.filter)

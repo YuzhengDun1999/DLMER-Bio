@@ -76,14 +76,14 @@ class Preprocessor(object):
 		"""
 		#print(probas)
 		nodes = [nid for nid in tree.expand_tree(mode=tree.WIDTH)] 
-		# replace here to extract all probas
+		# replace here to extract all probas, done
 
 		tree.fill_with(probas)
 		tree.update_values()
 		#ancestors = reduce(lambda x, y: x + y, [tree.get_path_to_node(nid) for nid in nodes])
 		#print(ancestors)
 		new_probas = [ ( nid, tree.get_node(nid).data ) for nid in nodes ]
-		new_probas.sort(key=lambda x: x[1], reverse=True) # sort here
+		new_probas.sort(key=lambda x: x[1], reverse=True) # sort here, done
 		
 		return new_probas
 

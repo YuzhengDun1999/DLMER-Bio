@@ -43,19 +43,48 @@ class Preprocessor(object):
 		paths = map(lambda x: ['-'.join(x[0:i]) for i in range(2, len(x) + 1)], basic_paths)
 		tree.from_paths(paths)
 		#tree.show()
+		print('Extending tree...')
+		#tree.show()
+		old_size = tree.size()
+		self.__extend_to_bottom(tree)
+		new_size = tree.size()
+		print('finished ! {} blank labels are created'.format(new_size - old_size))
 		tree.init_nodes_data(value=0)
 		return tree
+
+	def __extend_to_bottom(self, tree, max_blanks=10000):
+		"""
+		"""
+		# change here if you need more
+		blank_ids = map_itr(lambda x:'blank_{}'.format(x), range(max_blanks))
+		depth = tree.depth()
+
+		to_extend = [ [nid] + self.__get_n_blanks(n=depth - tree.level(nid), blank_ids=blank_ids) 
+					  for nid in tqdm(tree.expand_tree(mode=tree.WIDTH), total=tree.size()) 
+					  if len(tree.children(nid)) == 0 and tree.level(nid) < depth ]
+
+		to_extend = [(parent, child) for path in to_extend for parent, child in zip(path[:-1], path[1:])]
+		[tree.create_node(identifier=child, parent=parent) 
+		 for parent, child in to_extend]
+								 
+
+	def __get_n_blanks(self, n, blank_ids):
+		return [blank_ids.next() for i in range(n)]
 
 	def extract_probas(self, tree, probas):
 		"""
 		"""
 		#print(probas)
-		nodes = list(probas.keys())
+		nodes = [nid for nid in tree.expand_tree(mode=tree.WIDTH)] 
+		# replace here to extract all probas
+
 		tree.fill_with(probas)
 		tree.update_values()
-		ancestors = reduce(lambda x, y: x + y, [tree.get_path_to_node(nid) for nid in nodes])
+		#ancestors = reduce(lambda x, y: x + y, [tree.get_path_to_node(nid) for nid in nodes])
 		#print(ancestors)
-		new_probas = { ( nid, tree.get_node(nid).data ) for nid in ancestors}
+		new_probas = [ ( nid, tree.get_node(nid).data ) for nid in nodes ]
+		new_probas.sort(key=lambda x: x[1], reverse=True) # sort here
+		
 		return new_probas
 
 	def readlines_from_txt(self, file_dir):
@@ -127,6 +156,11 @@ class Preprocessor(object):
 		with open(output_file, 'w') as f:
 			f.write('\n'.join(df['text']))
 		print('Results are saved in {}'.format(output_file))
+
+
+class map_itr(map):
+
+	def next(self): return self.__next__()
 
 
 def rep_elements(elements, times):

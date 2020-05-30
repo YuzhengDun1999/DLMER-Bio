@@ -62,10 +62,10 @@ class Preprocessor(object):
 		to_extend = [ [nid] + self.__get_n_blanks(n=depth - tree.level(nid), blank_ids=blank_ids) 
 					  for nid in tqdm(tree.expand_tree(mode=tree.WIDTH), total=tree.size()) 
 					  if len(tree.children(nid)) == 0 and tree.level(nid) < depth ]
-
+		
+		to_extend = [['-'.join(path[:i]) for i in range(1,len(path)+1)] for path in to_extend]
 		to_extend = [(parent, child) for path in to_extend for parent, child in zip(path[:-1], path[1:])]
-		[tree.create_node(identifier=child, parent=parent) 
-		 for parent, child in to_extend]
+		[tree.create_node(identifier=child, parent=parent) for parent, child in to_extend]
 								 
 
 	def __get_n_blanks(self, n, blank_ids):

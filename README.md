@@ -49,7 +49,7 @@ Authors
 | :----------------------- | :------------------------------------------------ | :----------------------------------------------------------- |
 | Yuzheng Dun (maintainer) | yuzhengdun@hust.edu.cn                            | Research Assistant, School of Mathematics and Statistics, Huazhong University of Science & Technology |
 | Hugo Zha                 | hugozha@hust.edu.cn                               | Ph.D. Candidate, School of Life Science and Technology, Huazhong University of Science & Technology |
-| Hui Chong                | chonghui@hust.edu.cn<br />ch37915405887@gmail.com | Research Assistant, School of Mathematics and Statistics, Huazhong University of Science & Technology |
+| Hui Chong                | chonghui@hust.edu.cn<br />ch37915405887@gmail.com | Research Assistant, School of Life Science and Technology, Huazhong University of Science & Technology |
 | Kang Ning                | ningkang@hust.edu.cn                              | Professor, School of Life Science and Technology, Huazhong University of Science & Technology |
 
 Supplementary Information

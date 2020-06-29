@@ -1,6 +1,12 @@
-home = 'G:/source_tracking/evaluation/data1/full_feature'
-setwd(home)
+#!/usr/bin/env Rscript
 library('ggplot2')
+library(optparse)
+
+option_list <- list(
+  make_option(c("-i","--input"),type="character",default="result.txt", help="input file path")
+)
+opt <- parse_args(OptionParser(option_list=option_list))
+
 ROC = function(TPR, FPR){
   data1 = data.frame(FPR,TPR)
   data2 = data.frame(FPR1 = c(FPR,0,1),TPR1 = c(TPR,0,1))
@@ -16,7 +22,7 @@ ROC = function(TPR, FPR){
   p = ggplot(data1, aes(x = FPR, y = TPR)) + geom_point() + geom_area(fill = 'blue', alpha = 0.1) 
   p +  theme(plot.title = element_text(hjust = 0.5, size = 20, face = 'bold')) + ggtitle("ROC") + annotate("text", x = 0.006, y = 0.25, label = area, size = 8)
 }
-result = read.csv('output.csv')
+result = read.csv(opt$input)
 Pr = result$Pr
 Rc = result$Rc
 AvgPr = result$AvgPr

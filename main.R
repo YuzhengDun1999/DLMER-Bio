@@ -1,6 +1,16 @@
-setwd('G:/source_tracking/evaluation')
+#!/usr/bin/env Rscript
+setwd('/mnt/c/Users/ch379/Documents/project/DLMER-Bio') # absolute path to DLMER-Bio
 #timestart = Sys.time()
-data2 = file('result.txt',"r")
+library(optparse)
+
+option_list <- list(
+  make_option(c("-i","--input"),type="character",default="result.txt", help="input file path"),
+  make_option(c("-o","--output"), type="character",default="output.csv", help="output file path")
+)
+opt <- parse_args(OptionParser(option_list=option_list))
+
+data2 = file(opt$input,"r")
+source('evaluate.R')
 data_proc = alnres(data2)
 Pr_all = c()
 Rc_all = c()
@@ -33,8 +43,8 @@ for(i in 1:100){
   TPR_all = c(TPR_all, TPR)
   FPR_all = c(FPR_all, FPR)
 }
-output = list(Pr_all, Rc_all, AvgPr_all, AvgRc_all, em_all, f1_all, s1_all, TPR_all, FPR_all)
-write.csv(output, file = "output.csv")
+output = data.frame(Pr_all, Rc_all, AvgPr_all, AvgRc_all, em_all, f1_all, s1_all, TPR_all, FPR_all)
+write.csv(output, file = opt$output)
 close(data2)
 # cutoff = 0.5
 # result = efs(cutoff,data_proc)

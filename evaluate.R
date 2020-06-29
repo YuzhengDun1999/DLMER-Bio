@@ -72,7 +72,7 @@ readIC = function(label){
   #argv = commandArgs(trailingOnly = TRUE)
   #data1 = read.table(argv[2], sep = " ")
   #data1 = read.table('argminer_IC_new.txt', sep = " ")
-  data1 = file('G:/source_tracking/evaluation/IC.txt',"r")
+  data1 = file(paste0('/mnt/c/Users/ch379/Documents/project/DLMER-Bio/','IC.txt'),"r")
   for (line in readLines(data1)) {
    line = trimws(line, which = c("both", "left", "right")) #eliminate space
    line_temp_1 = unlist(strsplit(line, split = ","))

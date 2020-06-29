@@ -1,0 +1,15 @@
+RR503073|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR503073|root-Mixed 0.5181834885632096,0.4240021687516832,0.05781434268510726
+ERR503569|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR503569|root-Mixed 0.48200653808156224,0.4583825248314339,0.059610937087003914
+ERR504570|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR504570|root-Mixed 0.517458211462878,0.06954696237035463,0.41299482616676736
+ERR1075306|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1075306|root-Host-associated-Human 0.26912309729833267,0.03242466979073547,0.6984522329109317
+ERR503824|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR503824|root-Mixed 0.5300674298743553,0.05107822950870419,0.41885434061694055
+ERR1160631|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1160631|root-Host-associated-Human 0.5246200782058208,0.04144426468934424,0.43393565710483495
+ERR503424|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR503424|root-Mixed 0.5089844043581666,0.45718262540963023,0.03383297023220319
+ERR1091757|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1091757|root-Host-associated-Human 0.49353173255433824,0.03825621427818292,0.46821205316747877
+ERR1160656|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1160656|root-Host-associated-Human 0.5573421963471287,0.03368789054319486,0.4089699131096763
+ERR1075365|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1075365|root-Host-associated-Human 0.49960621954429,0.03345673494818032,0.4669370455075297
+ERR1073652|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1073652|root-Host-associated-Human 0.42172307038610307,0.1535511374635782,0.4247257921503186
+ERR1091721|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1091721|root-Host-associated-Human 0.3470689676240532,0.12247792400877647,0.5304531083671703
+ERR1073651|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1073651|root-Host-associated-Human 0.47547357271106133,0.03824157950489574,0.48628484778404296
+ERR1073611|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1073611|root-Host-associated-Human 0.5390118405392823,0.021010754927837355,0.43997740453288037
+ERR1090358|root-Host-associated-Human,root-Host-associated-Human-Digestive_system-Large_intestine-Fecal,root-Mixed ERR1090358|root-Host-associated-Human 0.6798382261695446,0.2778641934015073,0.04229758042894822
